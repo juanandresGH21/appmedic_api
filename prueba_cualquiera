@@ -1,0 +1,18 @@
+from datetime import date
+import os
+import sys
+import django
+
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+
+# Initialize Django
+django.setup()
+from api.models import Schedule
+from config import settings
+
+schedule = Schedule.objects.first()
+date('2024-01-01')
+
+print(date(schedule.start_date).isoformat())

@@ -1,0 +1,43 @@
+/staticfiles
+/deploy
+/backup
+/logs
+google-chrome-stable_current_amd64.deb
+/media/clientes
+*.pdf
+*.mp4
+*.xlsx
+# Archivos compilados de Python
+__pycache__/
+
+# Archivos de entorno virtual
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+/media
+
+.env
+.env.local
+.env.prod
+.env.testing
+
+# Archivos y directorios de IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales o de respaldo
+*~
+*.bak
+*.swp
+
+# Otros
+*.log
+logs.txt
+
+PruebaAseguradosYNoti.py
+/pruebasJA
