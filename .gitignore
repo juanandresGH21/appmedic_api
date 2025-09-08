@@ -2,8 +2,6 @@
 /deploy
 /backup
 /logs
-google-chrome-stable_current_amd64.deb
-/media/clientes
 *.pdf
 *.mp4
 *.xlsx
@@ -38,6 +36,3 @@ venv.bak/
 # Otros
 *.log
 logs.txt
-
-PruebaAseguradosYNoti.py
-/pruebasJA

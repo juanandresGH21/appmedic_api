@@ -9,10 +9,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 # Initialize Django
 django.setup()
-from api.models import Schedule
+from api.models import Schedule, User
 from config import settings
 
-schedule = Schedule.objects.first()
-date('2024-01-01')
+# schedule = Schedule.objects.first()
+# date('2024-01-01')
 
-print(date(schedule.start_date).isoformat())
+user = User.objects.first()
+print(user.password_hash)
+print(user.check_password('password12vb3'))

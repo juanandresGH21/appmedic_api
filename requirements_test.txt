@@ -1,0 +1,23 @@
+# Requirements para testing
+# Instalar con: pip install -r requirements_test.txt
+
+# Testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0      # Cobertura de código
+pytest-mock>=3.10.0    # Mocking para tests
+pytest-django>=4.5.0   # Integración con Django
+
+# HTTP testing
+requests>=2.28.0        # Para tests de API REST
+responses>=0.22.0       # Mock de responses HTTP
+
+# Utilities
+freezegun>=1.2.0        # Mock de fechas/tiempo
+factory-boy>=3.2.0      # Factory pattern para crear datos de test
+faker>=18.0.0           # Datos falsos para tests
+
+# Performance testing (opcional)
+pytest-benchmark>=4.0.0
+
+# Parallel testing (opcional)
+pytest-xdist>=3.0.0

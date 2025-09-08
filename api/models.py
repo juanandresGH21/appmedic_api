@@ -6,7 +6,19 @@ from django.utils import timezone
 from django.db import models
 from config import settings as setting
 
-
+def authenticate(email, password):
+    """
+    Autentica un usuario por email y contraseña
+    Retorna el usuario si es válido, None si no
+    """
+    try:
+        user = User.objects.get(email=email)
+        if user.check_password(password):
+            return user
+        return None
+    except User.DoesNotExist:
+        return None
+        
 class BaseModel(models.Model):
     created_by = models.IntegerField(null=True, blank=True)
     updated_by = models.IntegerField(null=True, blank=True)
@@ -234,6 +246,21 @@ class User(BaseModel):
             raise PermissionError("No tienes permisos para ver este paciente")
         
         return Schedule.objects.filter(user_id=patient_id)
+
+    def is_authenticated_user(self):
+        """Verifica si el usuario está activo y válido"""
+        return True  # Puedes agregar más validaciones aquí
+
+    def get_login_info(self):
+        """Retorna información básica del usuario para login"""
+        return {
+            'id': str(self.id),
+            'email': self.email,
+            'name': self.name,
+            'user_type': self.user_type,
+            'tz': self.tz,
+            'login_time': timezone.now().isoformat()
+        }
     
     class Meta:
         db_table = 'Users'

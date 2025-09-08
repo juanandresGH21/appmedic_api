@@ -8,7 +8,7 @@ from django.views import View
 import json
 from .models import (
     UserCreationService, User, Medication, Schedule, Intake,
-    DoctorPatientRelation, FamilyPatientRelation
+    DoctorPatientRelation, FamilyPatientRelation, authenticate
 )
 
 from utils.format import Format
@@ -868,3 +868,47 @@ class MedicationManagementView(View, PermissionMixin):
         except Exception as e:
             traceback.print_exc()
             return JsonResponse({'error': 'Error interno del servidor'}, status=500)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginView(View):
+    """Vista para autenticar usuarios"""
+    
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            
+            # Validar campos requeridos
+            if 'email' not in data or 'password' not in data:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Email y contraseña son requeridos'
+                }, status=400)
+            
+            # Intentar autenticar
+            user = authenticate(data['email'], data['password'])
+
+            if user:
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Login exitoso',
+                    'user': user.get_login_info(),
+                    'permissions': UserCreationService.get_user_permissions(user.id)
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Email o contraseña incorrectos'
+                }, status=401)
+                
+        except json.JSONDecodeError:
+            traceback.print_exc()
+            return JsonResponse({
+                'success': False,
+                'error': 'JSON inválido'
+            }, status=400)
+        except Exception as e:
+            traceback.print_exc()
+            return JsonResponse({
+                'success': False,
+                'error': 'Error interno del servidor'
+            }, status=500)

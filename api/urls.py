@@ -33,4 +33,7 @@ urlpatterns = [
     
     # Utilidades
     path('demo/create-sample-users/', views.create_sample_users_with_relations, name='create_sample_users'),
+
+    path('auth/login/', views.LoginView.as_view(), name='login'),
+
 ]
