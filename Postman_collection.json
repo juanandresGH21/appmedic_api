@@ -1,11 +1,172 @@
 {
 	"info": {
-		"_postman_id": "de22f5d9-8e23-4b5b-b648-1d5524009764",
+		"_postman_id": "aac3ea3c-2811-47f6-a6af-496875121584",
 		"name": "Api APPMEDIC",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33494865"
+		"_exporter_id": "43300201",
+		"_collection_link": "https://martian-station-731984.postman.co/workspace/Team-Workspace~ca538bfb-2055-43bf-8eaa-40ba2dd2e93f/collection/43300201-aac3ea3c-2811-47f6-a6af-496875121584?action=share&source=collection_link&creator=43300201"
 	},
 	"item": [
+		{
+			"name": "V2",
+			"item": [
+				{
+					"name": "Ver schedules de un paciente(familiar) V2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "User-ID",
+								"value": "6",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"patient_id\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/patient/schedules/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"patient",
+								"schedules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Usuario V2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_type\": \"family\",\r\n    \"email\": \"care@examples.com\",\r\n    \"password\": \"password123\",\r\n    \"name\": \"Nuevo Usuario\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/register/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver pacientes (doctor/familiar) V2",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-ID",
+								"value": "6",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/caregiver/patients/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"caregiver",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar cuidador V2",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "User-ID",
+								"value": "6",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"caregiver_id\": \"7\",\r\n    \"patient_id\": \"1\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/caregivers/manage/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"caregivers",
+								"manage",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asignar cuidador V2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "User-ID",
+								"value": "6",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"caregiver_type\": \"family\",\r\n    \"caregiver_id\": \"7\",\r\n    \"patient_id\": \"1\",\r\n    \"relationship_type\": \"parent\",\r\n    \"can_manage_medications\": true,\r\n    \"emergency_contact\": true\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/caregivers/manage/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"caregivers",
+								"manage",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Crear Usuario",
 			"request": {
