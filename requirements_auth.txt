@@ -1,0 +1,4 @@
+cryptography
+django-cors-headers
+drf-jwt
+pyjwt

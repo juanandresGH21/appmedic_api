@@ -21,4 +21,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('api/v2/', include('apirest.urls')),  # Endpoints con DRF
+    path('auth/', include('auth0authorization.urls')),  # Endpoints con DRF
 ]
