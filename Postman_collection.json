@@ -75,6 +75,16 @@
 				{
 					"name": "Ver pacientes (doctor/familiar) V2",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -159,6 +169,76 @@
 							"path": [
 								"caregivers",
 								"manage",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":\"ir4vAe3elHe1joNJXGG6XlZCFKyWki8x\",\n    \"client_secret\":\"AAXzx7BaB00i2JUjjGw9oxcz2D5Xzq8LrfdSJoGPJGVrI6GdG_aD0CgS9JMGvlUj\",\n    \"audience\":\"localhost/auth/\",\n    \"grant_type\":\"client_credentials\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dev-s6xqi0ox0fk82mwr.us.auth0.com/oauth/token",
+							"protocol": "https",
+							"host": [
+								"dev-s6xqi0ox0fk82mwr",
+								"us",
+								"auth0",
+								"com"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Endpoints Auth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/auth/private/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"private",
 								""
 							]
 						}
@@ -609,6 +689,11 @@
 	"variable": [
 		{
 			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "token",
 			"value": "",
 			"type": "default"
 		}
