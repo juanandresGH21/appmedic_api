@@ -15,6 +15,10 @@ from config import settings
 # schedule = Schedule.objects.first()
 # date('2024-01-01')
 
-user = User.objects.first()
-print(user.password_hash)
-print(user.check_password('password12vb3'))
+user = User.objects.last()
+# print(user.password_hash)
+# print(user.check_password('password12vb3'))
+
+user.auth0_id = 'auth0|68c0e3afeb441438327db419'
+
+user.save()

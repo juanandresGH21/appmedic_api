@@ -55,7 +55,27 @@ SECRET_KEY = 'django-insecure-@$ed=c%zs^ul=x@$au0+p1eppy+lkhe6=eza%n%cp-q6mh1rjt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Hosts permitidos
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 DATABASES = db.DATABASES
 
@@ -67,12 +87,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',  # ✅ Requerido para SessionMiddleware
     'rest_framework',
+    'corsheaders',
     'api',
     'apirest',
     'auth0authorization',
+    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',  # ✅ Requerido antes de AuthenticationMiddleware
     'django.middleware.common.CommonMiddleware',
@@ -166,9 +189,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'auth0authorization.authentication.CustomJSONWebTokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
@@ -191,3 +216,30 @@ JWT_AUTH = {
     'JWT_ISSUER': 'https://dev-s6xqi0ox0fk82mwr.us.auth0.com/',
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
+
+# SIMPLE_JWT = {  
+#     "ACCESS_TOKEN_LIFETIME": timedelta(days=31),  
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=365),  
+#     "ROTATE_REFRESH_TOKENS": False,  
+#     "BLACKLIST_AFTER_ROTATION": False,  
+#     "UPDATE_LAST_LOGIN": False,  
+#     "ALGORITHM": "HS256",  
+#     "SIGNING_KEY": SECRET_KEY,  
+#     "VERIFYING_KEY": None,  
+#     "AUDIENCE": AUTH0_AUDIENCE,  
+#     "ISSUER": f"https://{AUTH0_DOMAIN}/",  
+#     "JWK_URL": f"https://{AUTH0_DOMAIN}/.well-known/jwks.json",  
+#     "LEEWAY": 0,  "AUTH_HEADER_TYPES": ("Bearer",),  
+#     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",  
+#     "USER_ID_FIELD": "email",  
+#     "USER_ID_CLAIM": "email",  
+#     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",  
+#     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),  
+#     "TOKEN_TYPE_CLAIM": "token_type",   
+#     "JTI_CLAIM": "jti",  
+#     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",  
+#     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),  
+#     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1), 
+# }
+# Configuración del modelo de usuario personalizado
+AUTH_USER_MODEL = 'api.User'

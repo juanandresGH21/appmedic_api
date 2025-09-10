@@ -1,23 +1,18 @@
 import uuid
 from abc import ABC, abstractmethod
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.db import models
+from api.managers import UserManager
 from config import settings as setting
 
 def authenticate(email, password):
     """
-    Autentica un usuario por email y contraseña
+    Función de autenticación global (wrapper)
     Retorna el usuario si es válido, None si no
     """
-    try:
-        user = User.objects.get(email=email)
-        if user.check_password(password):
-            return user
-        return None
-    except User.DoesNotExist:
-        return None
+    return User.authenticate(email, password)
         
 class BaseModel(models.Model):
     created_by = models.IntegerField(null=True, blank=True)
@@ -137,50 +132,53 @@ class DoctorFactory(UserFactory):
         )
         return relation
 
-
-# Manager personalizado para User
-class UserManager(models.Manager):
-    def create_user(self, email, password, name, user_type='patient', **extra_fields):
-        if not email:
-            raise ValueError('El email es obligatorio')
-        
-        user = self.model(
-            email=email,
-            name=name,
-            user_type=user_type,
-            **extra_fields
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-
-# Modelo User
-class User(BaseModel):
+# Modelo User usando AbstractBaseUser (Django estándar)
+class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = [
         ('patient', 'Paciente'),
         ('family', 'Familiar'),
         ('doctor', 'Médico'),
     ]
     
-    email = models.EmailField(max_length=255, unique=True)
-    password_hash = models.CharField(max_length=255)
-    name = models.CharField(max_length=100)
-    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='patient')
-    tz = models.CharField(max_length=50, default='America/Bogota')
+    # Campos principales
+    auth0_id = models.CharField(max_length=255, unique=True, null=True, blank=True, 
+                               verbose_name='Auth0 ID')  # Para integración con Auth0
+    email = models.EmailField(max_length=255, unique=True, verbose_name='Correo electrónico')
+    name = models.CharField(max_length=150, verbose_name='Nombre completo')
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='patient',
+                               verbose_name='Tipo de usuario')
+    tz = models.CharField(max_length=50, default='America/Bogota', verbose_name='Zona horaria')
     
+    # Campos Django estándar
+    is_active = models.BooleanField(default=True, verbose_name='Activo')
+    is_staff = models.BooleanField(default=False, verbose_name='Staff')
+    date_joined = models.DateTimeField(default=timezone.now, verbose_name='Fecha de registro')
+    
+    # Campos adicionales (mantener compatibilidad)
+    is_change_password = models.BooleanField(default=False, verbose_name='Cambiar contraseña')
+    email_reset_token = models.TextField(null=True, blank=True, verbose_name='Token de reset')
+    
+    # Usar el manager personalizado
     objects = UserManager()
     
+    # Configuración de autenticación Django
+    EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
     
-    def set_password(self, raw_password):
-        from django.contrib.auth.hashers import make_password
-        self.password_hash = make_password(raw_password)
-    
-    def check_password(self, raw_password):
-        from django.contrib.auth.hashers import check_password
-        return check_password(raw_password, self.password_hash)
+    @classmethod
+    def authenticate(cls, email, password):
+        """
+        Método de autenticación personalizado
+        Retorna el usuario si es válido, None si no
+        """
+        try:
+            user = cls.objects.get(email=email)
+            if user.check_password(password):
+                return user
+            return None
+        except cls.DoesNotExist:
+            return None
     
     # Métodos de permisos generales
     def can_view_patient_data(self, patient_id):
