@@ -396,3 +396,35 @@ Para contribuir al proyecto:
 ## Licencia
 
 [Especificar licencia del proyecto]
+
+
+## Configuración para Pruebas con Auth0
+
+### Uso de LocalTunnel para Desarrollo
+
+Durante el desarrollo, Auth0 necesita acceder a tu API local desde la nube. Para esto puedes usar **LocalTunnel**, que crea un túnel público hacia tu servidor local.
+
+#### Instalación y Uso
+
+1. **Instalar LocalTunnel**:
+   ```bash
+   npm install -g localtunnel
+
+2. **Ejecutar tu servidor Django:**:
+python manage.py runserver 0.0.0.0:8000
+
+
+3. **Crear el túnel público:**:
+# En otra terminal
+lt --port 8000
+
+# Con subdominio personalizado (opcional)
+lt --port 8000 --subdomain mi-api-medica
+
+
+Ejecutar tu servidor Django:
+
+Crear el túnel público:
+
+4. **LocalTunnel te dará una URL pública:**:
+your url is: https://mi-api-medica.loca.lt

@@ -54,7 +54,8 @@ class UserRegistrationViewV2(APIView):
                         email=serializer.validated_data['email'],
                         password=serializer.validated_data['password'],
                         name=serializer.validated_data['name'],
-                        tz=serializer.validated_data.get('timezone', 'America/Bogota')
+                        tz=serializer.validated_data.get('timezone', 'America/Bogota'),
+                        auth0_id=serializer.validated_data['auth0_id']
                     )
                     
                     # Obtener permisos usando el servicio específico

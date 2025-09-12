@@ -26,6 +26,10 @@ class UserRegistrationSerializer(serializers.Serializer):
         required=False,
         help_text="Zona horaria del usuario"
     )
+    auth0_id = serializers.CharField(
+        max_length=100,
+        help_text="ID de Auth0 del usuario"
+    )
     
     def validate_email(self, value):
         """Validar que el email no esté en uso"""
