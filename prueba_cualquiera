@@ -18,7 +18,9 @@ from config import settings
 user = User.objects.last()
 # print(user.password_hash)
 # print(user.check_password('password12vb3'))
-
-user.auth0_id = 'auth0|68c0e3afeb441438327db419'
-
+print(user, user.pk)
+user.user_type = 'doctor'
 user.save()
+# user.auth0_id = 'auth0|68c0e3afeb441438327db419'
+
+# user.save()

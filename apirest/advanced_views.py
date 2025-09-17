@@ -1,6 +1,7 @@
 """
 Vistas DRF que utilizan la nueva Factory
 """
+import traceback
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 
 from .factories import UserServiceFactory
 from .serializers import (
@@ -17,7 +19,8 @@ from .serializers import (
     CaregiverRemovalSerializer,
     UserPermissionsSerializer,
     PatientScheduleRequestSerializer,
-    UserServiceMethodSerializer
+    UserServiceMethodSerializer,
+    UserAdminSerializer,
 )
 
 
@@ -26,6 +29,8 @@ class PermissionMixin:
     
     def get_user_from_request(self, request):
         """Obtener usuario autenticado desde header"""
+        if request.user and request.user.is_authenticated:
+            return request.user
         user_id = request.META.get('HTTP_USER_ID')
         if not user_id:
             raise ValueError("User-ID header requerido")
@@ -329,6 +334,79 @@ class UserServiceMethodViewV2(APIView, PermissionMixin):
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            return Response({
+                'success': False,
+                'error': 'Error interno del servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminAllUsersSchedulesView(APIView, PermissionMixin):
+    """Vista administrativa para obtener todos los usuarios y sus schedules - Solo para doctores"""
+    
+    def get(self, request):
+        """Obtener todos los usuarios y sus schedules - Solo doctores"""
+        try:
+            user = self.get_user_from_request(request)
+            
+            # Verificar que sea doctor
+            if user.user_type != 'doctor':
+                return Response({
+                    'success': False,
+                    'error': 'Solo los doctores pueden acceder a esta información'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            from api.models import User
+            
+            # Obtener todos los usuarios con optimización de consultas
+            all_users = User.objects.all().prefetch_related(
+                'schedule_set__medication'
+            ).order_by('created_at')
+            
+            # Serializar usuarios (el serializer maneja toda la lógica)
+            users_serializer = UserAdminSerializer(all_users, many=True)
+            users_data = users_serializer.data
+            
+            # Calcular estadísticas simples
+            total_users = len(users_data)
+            total_schedules = sum(user['total_schedules'] for user in users_data)
+            
+            # Contar usuarios por tipo
+            users_by_type = {}
+            for user_data in users_data:
+                user_type = user_data['user_type']
+                users_by_type[user_type] = users_by_type.get(user_type, 0) + 1
+            
+            # Crear datos de estadísticas
+            statistics_data = {
+                'total_users': total_users,
+                'total_schedules': total_schedules,
+                'users_by_type': users_by_type,
+                'requested_by_doctor_id': user.id,
+                'requested_by_doctor_name': user.name,
+                'requested_by_doctor_email': user.email
+            }
+            
+            # Datos de respuesta final
+            response_data = {
+                'success': True,
+                'users': users_data,
+                'statistics': statistics_data,
+                'message': f'Se encontraron {total_users} usuarios con {total_schedules} schedules en total'
+            }
+            
+            # Serializar respuesta completa
+            # response_serializer = AdminAllUsersSchedulesResponseSerializer(data=response_data)
+            # response_serializer.is_valid(raise_exception=True)
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except ValueError as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            traceback.print_exc()
             return Response({
                 'success': False,
                 'error': 'Error interno del servidor'

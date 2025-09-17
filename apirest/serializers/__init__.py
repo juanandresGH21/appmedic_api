@@ -7,6 +7,10 @@ from .factory_serializers import (
     PatientScheduleRequestSerializer,
     UserServiceMethodSerializer
 )
+from .admin_serializers import (
+    ScheduleAdminSerializer,
+    UserAdminSerializer,
+)
 
 __all__ = [
     'UserRegistrationSerializer',
@@ -17,4 +21,6 @@ __all__ = [
     'UserPermissionsSerializer',
     'PatientScheduleRequestSerializer',
     'UserServiceMethodSerializer',
+    'ScheduleAdminSerializer',
+    'UserAdminSerializer',
 ]

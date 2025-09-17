@@ -9,7 +9,9 @@ from .advanced_views import (
     UserPermissionsViewV2,
     CaregiverManagementViewV2,
     PatientSchedulesViewV2,
-    UserServiceMethodViewV2
+    UserServiceMethodViewV2,
+    AdminAllUsersSchedulesView
+
 )
 
 app_name = 'apirest'
@@ -21,6 +23,7 @@ urlpatterns = [
     path('caregivers/manage/', CaregiverManagementViewV2.as_view(), name='caregiver-management'),
     path('patient/schedules/', PatientSchedulesViewV2.as_view(), name='patient-schedules'),
     path('users/execute-method/', UserServiceMethodViewV2.as_view(), name='user-method'),
+    path('admin/patients/', AdminAllUsersSchedulesView.as_view(), name='admin-method'),
     
     # Endpoints de compatibilidad (versión básica)
     path('caregiver/patients/', CaregiverPatientsView.as_view(), name='caregiver-patients'),

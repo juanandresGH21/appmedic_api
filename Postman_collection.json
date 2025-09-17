@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "aac3ea3c-2811-47f6-a6af-496875121584",
+		"_postman_id": "fe85b307-5a67-414f-a8a6-a7d43acdc675",
 		"name": "Api APPMEDIC",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43300201",
-		"_collection_link": "https://martian-station-731984.postman.co/workspace/Team-Workspace~ca538bfb-2055-43bf-8eaa-40ba2dd2e93f/collection/43300201-aac3ea3c-2811-47f6-a6af-496875121584?action=share&source=collection_link&creator=43300201"
+		"_exporter_id": "33494865"
 	},
 	"item": [
 		{
@@ -80,7 +79,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{token}}",
+									"value": "",
 									"type": "string"
 								}
 							]
@@ -154,7 +153,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"caregiver_type\": \"family\",\r\n    \"caregiver_id\": \"7\",\r\n    \"patient_id\": \"1\",\r\n    \"relationship_type\": \"parent\",\r\n    \"can_manage_medications\": true,\r\n    \"emergency_contact\": true\r\n  }",
+							"raw": "{\r\n    \"caregiver_type\": \"doctor\",\r\n    \"caregiver_id\": \"12\",\r\n    \"patient_id\": \"1\",\r\n    \"relationship_type\": \"parent\",\r\n    \"can_manage_medications\": true,\r\n    \"emergency_contact\": true\r\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -239,6 +238,35 @@
 							"path": [
 								"auth",
 								"private",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pacientes y Schedules (admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/admin/patients/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"patients",
 								""
 							]
 						}
