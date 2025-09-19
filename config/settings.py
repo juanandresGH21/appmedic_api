@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import mimetypes
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.init()
-from config import db
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -78,6 +77,7 @@ CORS_ALLOW_HEADERS = [
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 ALLOWED_HOSTS = ["*"]
 
+from config import db
 DATABASES = db.DATABASES
 
 
